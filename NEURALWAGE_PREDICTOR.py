@@ -2,13 +2,13 @@ import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.neural_network import MLPClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 import seaborn as sns
 import time
+from lightgbm import LGBMClassifier
 
 # --- GLOBAL STYLING ---
 custom_css = """
@@ -85,7 +85,7 @@ X, y, preprocessor, original_data = load_and_preprocess_data()
 # --- Model ---
 @st.cache_resource
 def train_model(X_train, y_train):
-    clf = MLPClassifier(solver='adam', hidden_layer_sizes=(5, 2), random_state=2, max_iter=2000)
+    clf = LGBMClassifier(random_state=2)
     clf.fit(X_train, y_train)
     return clf
 
@@ -95,8 +95,8 @@ ypred = model.predict(xtest)
 accuracy = accuracy_score(ytest, ypred)
 
 # --- Page Layout ---
-st.set_page_config(layout="wide", page_title="💸 NeuralWage Predictor")
-st.title("💼 NeuralWage Predictor 💸")
+st.set_page_config(layout="wide", page_title="💸 LightGBM Wage Predictor")
+st.title("💼 LightGBM Wage Predictor 💸")
 
 with st.container():
     st.markdown("Welcome to the most futuristic salary prediction platform! Predict salaries with flair. 🔮")
@@ -151,7 +151,7 @@ with tab2:
                  'capital-gain', 'capital-loss', 'hours-per-week'])
 
     if st.button("🎯 Predict Now"):
-        with st.spinner("Crunching the neural net..."):
+        with st.spinner("Crunching LightGBM model..."):
             time.sleep(1.5)
             input_processed = preprocessor.transform(input_df)
             if hasattr(input_processed, "toarray"):
