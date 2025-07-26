@@ -1,0 +1,8 @@
+streamlit
+pandas
+scikit-learn
+matplotlib
+seaborn
+xgboost
+lightgbm
+catboost
